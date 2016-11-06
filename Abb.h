@@ -203,7 +203,6 @@ ABB<T>::ABB(const ABB &orig) {
 
 }
 
-template<typename T>
 
 
 
