@@ -61,13 +61,15 @@ private:
 
     void postorden(Nodo<T> *p, int nivel);
 
+    std::vector<Nodo<T>*> anchura(Nodo<T> * &p);
+
 
 public:
     ABB();
 
     ABB(const ABB<T> &orig);
 
-    bool buscar(T &ele, T &resultado);
+    bool buscar(T &ele, Nodo<T>* &resultado);
 
     bool insertar(T &ele);
 
@@ -194,7 +196,7 @@ Nodo<T> *ABB<T>::buscaClave(T &ele) {
  * @return true si se ha encontrado, false en otro caso
  */
 template<typename T>
-bool ABB<T>::buscar(T &ele, T &resultado) {
+bool ABB<T>::buscar(T &ele, Nodo<T>* &resultado) {
     resultado = buscaClave(ele);
     return (resultado != 0);
 }
@@ -208,25 +210,14 @@ template<typename T>
 ABB<T>::ABB(const ABB &orig) {
     if (orig.raiz != 0) {
         *this = ABB<T>();
-        std::vector<Nodo<T> *> tmp;
         Nodo<T> *actual = orig.raiz;
-        tmp.push_back(actual);
-        int index = 0;
-        while (actual->tieneIzquierda() || actual->tieneDerecha() || index < tmp.size()) {
-            actual = tmp[index];
-            if (actual->tieneDerecha()) {
-                tmp.push_back(actual->getDerecha());
-            }
-            if (actual->tieneIzquierda()) {
-                tmp.push_back(actual->getIzquierda());
-            }
-            ++index;
-        }
+        std::vector<Nodo<T> *> tmp = this->anchura(actual);
         for (int i = 0; i < tmp.size(); ++i) {
             this->inserta(tmp[i]);
         }
     }
 }
+
 /**
  * Funcion auxiliar que busca el padre un nodo, se supone el nodo existente
  * @param p Nodo a buscar
@@ -259,10 +250,69 @@ Nodo<T> *ABB<T>::buscaPadre(Nodo<T> *&p) {
 template<typename T>
 Nodo<T> *ABB<T>::borraDato(T &ele, Nodo<T> *&p) {
     Nodo<T> *actual = this->buscaClave(ele);
-    int index = 0;
+    std::vector<Nodo<T> *> tmp= this->anchura(actual);
+    for (int i = tmp.size() - 1; i >= 0; --i) {//borrado completo del subarbol
+        actual = tmp[i];
+        if (actual->tieneDerecha()) {
+            delete actual->getDerecha();
+        }
+        if (actual->tieneIzquierda()) {
+            delete actual->getIzquierda();
+        }
+    }
+
+    Nodo<T> *padre = buscaPadre(p);//aqui elimino la referencia del padre al nodo que borramos
+    if (padre->tieneDerecha()) {
+        if (padre->getDerecha() == p) {
+            delete padre->getDerecha();
+        }
+    } else {
+        delete padre->getIzquierda();
+    }
+    return actual;
+}
+/**
+ * Borra un elemento en el arbol
+ * @param ele elemento a borrar
+ * @return resultado del borrado
+ */
+template<typename T>
+bool ABB<T>::eliminar(T &ele) {
+    Nodo<T>* tmp;
+    if(this->buscar(ele,tmp)){
+        this->borraDato(ele,tmp);
+        delete tmp;
+        return true;
+    }
+    return false;
+}
+
+template<typename T>
+int ABB<T>::numElementos() {
+    std::vector<Nodo<T> *> tmp=this->anchura(raiz);
+    return tmp.size();
+}
+template<typename T>
+int ABB<T>::altura() {
+    int altura=0;
+    std::vector<Nodo<T>*> tmp=this->anchura(raiz);
+    Nodo<T> * minimo=tmp[tmp.size()-1];
+    Nodo<T> * actual=minimo;
+    while(actual!=raiz){
+        actual=this->buscaPadre(actual);
+        ++altura;
+    }
+
+    return altura;
+}
+
+template<typename T>
+std::vector<Nodo<T> *>  ABB<T>::anchura(Nodo<T> *&p) {
     std::vector<Nodo<T> *> tmp;
+    Nodo<T> *actual = p;
     tmp.push_back(actual);
-    while (actual->tieneIzquierda() || actual->tieneDerecha() || index < tmp.size()) {//sacamos el subarbol por anchura
+    int index = 0;
+    while (actual->tieneIzquierda() || actual->tieneDerecha() || index < tmp.size()) {
         actual = tmp[index];
         if (actual->tieneDerecha()) {
             tmp.push_back(actual->getDerecha());
@@ -272,25 +322,7 @@ Nodo<T> *ABB<T>::borraDato(T &ele, Nodo<T> *&p) {
         }
         ++index;
     }
-    for(int i=tmp.size()-1;i>=0;--i){//borrado completo del subarbol
-        actual=tmp[i];
-        if(actual->tieneDerecha()){
-            delete actual->getDerecha();
-        }
-        if(actual->tieneIzquierda()){
-            delete actual->getIzquierda();
-        }
-    }
-
-    Nodo<T> * padre=buscaPadre(p);//aqui elimino la referencia del padre al nodo que borramos
-    if(padre->tieneDerecha()){
-        if(padre->getDerecha()==p){
-            delete padre->getDerecha();
-        }
-    }else{
-        delete padre->getIzquierda();
-    }
-    return actual;
+    return tmp;
 }
 
 
