@@ -105,15 +105,16 @@ ABB<T>::ABB() {
  */
 template<typename T>
 Nodo<T> *ABB<T>::inserta(const T &dato) {
+
+    if (raiz == 0) {
+        Nodo<T> *tmp = new Nodo<T>(); //En este caso es el de que la raiz es nula
+        tmp->setDato(dato);
+        raiz=tmp;
+        return tmp;
+    }
     Nodo<T> *actual = raiz;
     bool insertado = false;
     while (!insertado) {
-        if (actual == 0) {
-            Nodo<T> *tmp = new Nodo<T>(); //En este caso es el de que la raiz es nula
-            tmp->setDato(dato);
-            actual = tmp;
-            insertado = true;
-        } else {
             if (actual->getDato() < dato) {//rama de la izquierda
                 if (actual->tieneIzquierda()) {
                     actual = actual->getIzquierda();//si no esta vacio iteramos a la izquierda y repetimos el proceso
@@ -138,7 +139,7 @@ Nodo<T> *ABB<T>::inserta(const T &dato) {
                 insertado = true;
                 actual = 0;
             }
-        }
+
     }
     return actual;
 }
@@ -305,7 +306,11 @@ int ABB<T>::altura() {
 
     return altura;
 }
-
+/**
+ * funcion auxiliar pasa el arbol a un vector en modo anchura
+ * @param p
+ * @return
+ */
 template<typename T>
 std::vector<Nodo<T> *>  ABB<T>::anchura(Nodo<T> *&p) {
     std::vector<Nodo<T> *> tmp;
