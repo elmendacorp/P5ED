@@ -47,6 +47,10 @@ private:
 
     Nodo<T> *buscaClave(T &ele);
 
+    Nodo<T> *borraDato(T &ele, Nodo<T> *&p);
+
+    Nodo<T> *buscaPadre(Nodo<T> *&p);
+
     Nodo<T> *insertarDato(T &ele, Nodo<T> *p);
 
     Nodo<T> *borraMin(Nodo<T> *&p);
@@ -118,8 +122,7 @@ Nodo<T> *ABB<T>::inserta(const T &dato) {
                     actual = tmp;
                     insertado = true;
                 }
-            }
-            if (actual->getDato() > dato) {
+            } else if (actual->getDato() > dato) {
                 if (actual->tieneDerecha()) {
                     actual = actual->getDerecha();
                 } else {
@@ -168,14 +171,14 @@ Nodo<T> *ABB<T>::buscaClave(T &ele) {
                     actual = 0;
                     encontrado = true;
                 }
-            }
-            if (actual->getDato() > ele) {
+            } else if (actual->getDato() > ele) {
                 if (actual->tieneDerecha()) {
                     actual = actual->getDerecha();
                 } else {
                     actual = 0;
                     encontrado = true;
                 }
+
             } else {//caso de que el elemento sea igual
                 encontrado = true;
             }
@@ -196,6 +199,11 @@ bool ABB<T>::buscar(T &ele, T &resultado) {
     return (resultado != 0);
 }
 
+/**
+ * Construcctor de copia, usa un recorrido en anchura y luego una insercion ordenada para mantener la estructura
+ * @param orig
+ * @return
+ */
 template<typename T>
 ABB<T>::ABB(const ABB &orig) {
     if (orig.raiz != 0) {
@@ -219,8 +227,43 @@ ABB<T>::ABB(const ABB &orig) {
         }
     }
 }
-
+/**
+ * Funcion auxiliar que busca el padre un nodo, se supone el nodo existente
+ * @param p Nodo a buscar
+ * @return
+ */
 template<typename T>
+Nodo<T> *ABB<T>::buscaPadre(Nodo<T> *&p) {
+    Nodo<T> *tmp = raiz;
+    bool encontrado = false;
+    if (p == raiz) {
+        return 0; //en el caso de que la raiz sea el nodo buscado no tiene padre
+    }
+    while (!encontrado) {
+        if (tmp->getIzquierda() == p || tmp->getDerecha() == p) {
+            return tmp;
+        } else if (p->getDato() < p->getIzquierda()->getDato()) {
+            tmp = tmp->getIzquierda();
+        } else if (p->getDato() > p->getDerecha()->getDato()) {
+            tmp = tmp->getDerecha();
+        }
+    }
+}
+
+/**
+ * Borrado de un elemento y el subarbol que cuelga de el
+ * @param ele dato a comparar
+ * @param p subarbol de partida
+ * @return Nodo del elemento buscado
+ */
+template<typename T>
+Nodo<T> *ABB<T>::borraDato(T &ele, Nodo<T> *&p) {
+    Nodo<T> *actual = p;
+    int index = 0;
+    std::vector<Nodo<T> *> tmp;
+
+
+}
 
 
 #endif //UNTITLED_ABB_H
