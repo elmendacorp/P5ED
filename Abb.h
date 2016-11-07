@@ -193,18 +193,34 @@ Nodo<T> *ABB<T>::buscaClave(T &ele) {
 template<typename T>
 bool ABB<T>::buscar(T &ele, T &resultado) {
     resultado = buscaClave(ele);
-    return (resultado!=0);
+    return (resultado != 0);
 }
 
 template<typename T>
 ABB<T>::ABB(const ABB &orig) {
-    std::vector<Nodo<T>*> tmp;
-    Nodo<T> * actual=orig.raiz;
-
+    if (orig.raiz != 0) {
+        *this = ABB<T>();
+        std::vector<Nodo<T> *> tmp;
+        Nodo<T> *actual = orig.raiz;
+        tmp.push_back(actual);
+        int index = 0;
+        while (actual->tieneIzquierda() || actual->tieneDerecha() || index < tmp.size()) {
+            actual = tmp[index];
+            if (actual->tieneDerecha()) {
+                tmp.push_back(actual->getDerecha());
+            }
+            if (actual->tieneIzquierda()) {
+                tmp.push_back(actual->getIzquierda());
+            }
+            ++index;
+        }
+        for (int i = 0; i < tmp.size(); ++i) {
+            this->inserta(tmp[i]);
+        }
+    }
 }
 
 template<typename T>
-
 
 
 #endif //UNTITLED_ABB_H
