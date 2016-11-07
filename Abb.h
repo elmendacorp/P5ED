@@ -336,7 +336,10 @@ std::vector<Nodo<T> *>  ABB<T>::anchura(Nodo<T> *&p) {
     }
     return tmp;
 }
-
+/**
+ * devuelve el numero de hojas del arbol
+ * @return
+ */
 template<typename T>
 int ABB<T>::numHojas() {
     int hojas=0;
@@ -352,7 +355,14 @@ int ABB<T>::numHojas() {
 }
 template<typename T>
 Nodo<T> *ABB::borraMin(Nodo<T> *&p) {
-    return nullptr;
+    Nodo<T> *tmp=p;
+    while(p->tieneIzquierda()){
+        tmp=p->getIzquierda();
+    }
+    if(tmp!=0){
+        this->borraDato(tmp->getDato(),tmp);
+    }
+    return tmp;
 }
 
 
