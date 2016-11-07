@@ -287,12 +287,19 @@ bool ABB<T>::eliminar(T &ele) {
     }
     return false;
 }
-
+/**
+ * Calcula el numero de elementos del arbol
+ * @return
+ */
 template<typename T>
 int ABB<T>::numElementos() {
     std::vector<Nodo<T> *> tmp=this->anchura(raiz);
-    return tmp.size();
+    return (int)tmp.size();
 }
+/**
+ * Calcula la altura maxima del arbol
+ * @return
+ */
 template<typename T>
 int ABB<T>::altura() {
     int altura=0;
@@ -309,7 +316,7 @@ int ABB<T>::altura() {
 /**
  * funcion auxiliar pasa el arbol a un vector en modo anchura
  * @param p
- * @return
+ * @return vector con el recorrido en anchura
  */
 template<typename T>
 std::vector<Nodo<T> *>  ABB<T>::anchura(Nodo<T> *&p) {
@@ -328,6 +335,24 @@ std::vector<Nodo<T> *>  ABB<T>::anchura(Nodo<T> *&p) {
         ++index;
     }
     return tmp;
+}
+
+template<typename T>
+int ABB<T>::numHojas() {
+    int hojas=0;
+    Nodo<T>* aux;
+    std::vector<Nodo<T>*> tmp=this->anchura(raiz);
+    for(int i=0;i<tmp.size();++i){
+        aux=tmp[i];
+        if(!aux->tieneDerecha()&&!aux->tieneIzquierda()){
+            ++hojas;
+        }
+    }
+    return hojas;
+}
+template<typename T>
+Nodo<T> *ABB::borraMin(Nodo<T> *&p) {
+    return nullptr;
 }
 
 
