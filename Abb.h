@@ -258,11 +258,39 @@ Nodo<T> *ABB<T>::buscaPadre(Nodo<T> *&p) {
  */
 template<typename T>
 Nodo<T> *ABB<T>::borraDato(T &ele, Nodo<T> *&p) {
-    Nodo<T> *actual = p;
+    Nodo<T> *actual = this->buscaClave(ele);
     int index = 0;
     std::vector<Nodo<T> *> tmp;
+    tmp.push_back(actual);
+    while (actual->tieneIzquierda() || actual->tieneDerecha() || index < tmp.size()) {//sacamos el subarbol por anchura
+        actual = tmp[index];
+        if (actual->tieneDerecha()) {
+            tmp.push_back(actual->getDerecha());
+        }
+        if (actual->tieneIzquierda()) {
+            tmp.push_back(actual->getIzquierda());
+        }
+        ++index;
+    }
+    for(int i=tmp.size()-1;i>=0;--i){//borrado completo del subarbol
+        actual=tmp[i];
+        if(actual->tieneDerecha()){
+            delete actual->getDerecha();
+        }
+        if(actual->tieneIzquierda()){
+            delete actual->getIzquierda();
+        }
+    }
 
-
+    Nodo<T> * padre=buscaPadre(p);//aqui elimino la referencia del padre al nodo que borramos
+    if(padre->tieneDerecha()){
+        if(padre->getDerecha()==p){
+            delete padre->getDerecha();
+        }
+    }else{
+        delete padre->getIzquierda();
+    }
+    return actual;
 }
 
 
