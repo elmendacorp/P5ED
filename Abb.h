@@ -61,7 +61,7 @@ private:
 
     void postorden(Nodo<T> *p, int nivel);
 
-    std::vector<Nodo<T>*> anchura(Nodo<T> * &p);
+    std::vector<Nodo<T> *> anchura(Nodo<T> *&p);
 
 
 public:
@@ -69,7 +69,7 @@ public:
 
     ABB(const ABB<T> &orig);
 
-    bool buscar(T &ele, Nodo<T>* &resultado);
+    bool buscar(T &ele, Nodo<T> *&resultado);
 
     bool insertar(T &ele);
 
@@ -109,36 +109,36 @@ Nodo<T> *ABB<T>::inserta(const T &dato) {
     if (raiz == 0) {
         Nodo<T> *tmp = new Nodo<T>(); //En este caso es el de que la raiz es nula
         tmp->setDato(dato);
-        raiz=tmp;
+        raiz = tmp;
         return tmp;
     }
     Nodo<T> *actual = raiz;
     bool insertado = false;
     while (!insertado) {
-            if (actual->getDato() < dato) {//rama de la izquierda
-                if (actual->tieneIzquierda()) {
-                    actual = actual->getIzquierda();//si no esta vacio iteramos a la izquierda y repetimos el proceso
-                } else {
-                    Nodo<T> *tmp = new Nodo<T>();
-                    tmp->setDato(dato);
-                    actual->setIzquierda(tmp);
-                    actual = tmp;
-                    insertado = true;
-                }
-            } else if (actual->getDato() > dato) {
-                if (actual->tieneDerecha()) {
-                    actual = actual->getDerecha();
-                } else {
-                    Nodo<T> *tmp = new Nodo<T>();
-                    tmp->setDato(dato);
-                    actual->setDerecha(tmp);
-                    actual = tmp;
-                    insertado = true;
-                }
+        if (actual->getDato() < dato) {//rama de la izquierda
+            if (actual->tieneIzquierda()) {
+                actual = actual->getIzquierda();//si no esta vacio iteramos a la izquierda y repetimos el proceso
             } else {
+                Nodo<T> *tmp = new Nodo<T>();
+                tmp->setDato(dato);
+                actual->setIzquierda(tmp);
+                actual = tmp;
                 insertado = true;
-                actual = 0;
             }
+        } else if (actual->getDato() > dato) {
+            if (actual->tieneDerecha()) {
+                actual = actual->getDerecha();
+            } else {
+                Nodo<T> *tmp = new Nodo<T>();
+                tmp->setDato(dato);
+                actual->setDerecha(tmp);
+                actual = tmp;
+                insertado = true;
+            }
+        } else {
+            insertado = true;
+            actual = 0;
+        }
 
     }
     return actual;
@@ -197,7 +197,7 @@ Nodo<T> *ABB<T>::buscaClave(T &ele) {
  * @return true si se ha encontrado, false en otro caso
  */
 template<typename T>
-bool ABB<T>::buscar(T &ele, Nodo<T>* &resultado) {
+bool ABB<T>::buscar(T &ele, Nodo<T> *&resultado) {
     resultado = buscaClave(ele);
     return (resultado != 0);
 }
@@ -251,7 +251,7 @@ Nodo<T> *ABB<T>::buscaPadre(Nodo<T> *&p) {
 template<typename T>
 Nodo<T> *ABB<T>::borraDato(T &ele, Nodo<T> *&p) {
     Nodo<T> *actual = this->buscaClave(ele);
-    std::vector<Nodo<T> *> tmp= this->anchura(actual);
+    std::vector<Nodo<T> *> tmp = this->anchura(actual);
     for (int i = tmp.size() - 1; i >= 0; --i) {//borrado completo del subarbol
         actual = tmp[i];
         if (actual->tieneDerecha()) {
@@ -272,6 +272,7 @@ Nodo<T> *ABB<T>::borraDato(T &ele, Nodo<T> *&p) {
     }
     return actual;
 }
+
 /**
  * Borra un elemento en el arbol
  * @param ele elemento a borrar
@@ -279,47 +280,50 @@ Nodo<T> *ABB<T>::borraDato(T &ele, Nodo<T> *&p) {
  */
 template<typename T>
 bool ABB<T>::eliminar(T &ele) {
-    Nodo<T>* tmp;
-    if(this->buscar(ele,tmp)){
-        this->borraDato(ele,tmp);
+    Nodo<T> *tmp;
+    if (this->buscar(ele, tmp)) {
+        this->borraDato(ele, tmp);
         delete tmp;
         return true;
     }
     return false;
 }
+
 /**
  * Calcula el numero de elementos del arbol
  * @return
  */
 template<typename T>
 int ABB<T>::numElementos() {
-    std::vector<Nodo<T> *> tmp=this->anchura(raiz);
-    return (int)tmp.size();
+    std::vector<Nodo<T> *> tmp = this->anchura(raiz);
+    return (int) tmp.size();
 }
+
 /**
  * Calcula la altura maxima del arbol
  * @return
  */
 template<typename T>
 int ABB<T>::altura() {
-    int altura=0;
-    std::vector<Nodo<T>*> tmp=this->anchura(raiz);
-    Nodo<T> * minimo=tmp[tmp.size()-1];
-    Nodo<T> * actual=minimo;
-    while(actual!=raiz){
-        actual=this->buscaPadre(actual);
+    int altura = 0;
+    std::vector<Nodo<T> *> tmp = this->anchura(raiz);
+    Nodo<T> *minimo = tmp[tmp.size() - 1];
+    Nodo<T> *actual = minimo;
+    while (actual != raiz) {
+        actual = this->buscaPadre(actual);
         ++altura;
     }
 
     return altura;
 }
+
 /**
  * funcion auxiliar pasa el arbol a un vector en modo anchura
  * @param p
  * @return vector con el recorrido en anchura
  */
 template<typename T>
-std::vector<Nodo<T> *>  ABB<T>::anchura(Nodo<T> *&p) {
+std::vector<Nodo<T> *> ABB<T>::anchura(Nodo<T> *&p) {
     std::vector<Nodo<T> *> tmp;
     Nodo<T> *actual = p;
     tmp.push_back(actual);
@@ -336,34 +340,45 @@ std::vector<Nodo<T> *>  ABB<T>::anchura(Nodo<T> *&p) {
     }
     return tmp;
 }
+
 /**
  * devuelve el numero de hojas del arbol
  * @return
  */
 template<typename T>
 int ABB<T>::numHojas() {
-    int hojas=0;
-    Nodo<T>* aux;
-    std::vector<Nodo<T>*> tmp=this->anchura(raiz);
-    for(int i=0;i<tmp.size();++i){
-        aux=tmp[i];
-        if(!aux->tieneDerecha()&&!aux->tieneIzquierda()){
+    int hojas = 0;
+    Nodo<T> *aux;
+    std::vector<Nodo<T> *> tmp = this->anchura(raiz);
+    for (int i = 0; i < tmp.size(); ++i) {
+        aux = tmp[i];
+        if (!aux->tieneDerecha() && !aux->tieneIzquierda()) {
             ++hojas;
         }
     }
     return hojas;
 }
+
+/**
+ * borra el hijo mas a la izquierda del nodo que se le indica
+ * @param p Nodo de inicio
+ * @return Nodo borrado
+ */
 template<typename T>
-Nodo<T> *ABB::borraMin(Nodo<T> *&p) {
-    Nodo<T> *tmp=p;
-    while(p->tieneIzquierda()){
-        tmp=p->getIzquierda();
+Nodo<T> *ABB<T>::borraMin(Nodo<T> *&p) {
+    Nodo<T> *tmp = p;
+    while (p->tieneIzquierda()) {
+        tmp = p->getIzquierda();
     }
-    if(tmp!=0){
-        this->borraDato(tmp->getDato(),tmp);
+    if (tmp != 0) {
+        this->borraDato(tmp->getDato(), tmp);
     }
     return tmp;
 }
 
+template<typename T>
+Nodo<T> *ABB<T>::insertarDato(T &ele, Nodo<T> *p) { //que se supone que debe hacer esto?
+    return nullptr;
+}
 
 #endif //UNTITLED_ABB_H
