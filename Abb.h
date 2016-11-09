@@ -305,7 +305,7 @@ int ABB<T>::numElementos() {
  */
 template<typename T>
 int ABB<T>::altura() {
-    int altura = 0;
+    int altura = 1;
     std::vector<Nodo<T> *> tmp = this->anchura(raiz);
     Nodo<T> *minimo = tmp[tmp.size() - 1];
     Nodo<T> *actual = minimo;
@@ -377,7 +377,7 @@ Nodo<T> *ABB<T>::borraMin(Nodo<T> *&p) {
 }
 
 template<typename T>
-Nodo<T> *ABB<T>::insertarDato(T &ele, Nodo<T> *p) { //que se supone que debe hacer esto?
+Nodo<T> *ABB<T>::insertarDato(T &ele, Nodo<T> *p) { //TODO:que se supone que debe hacer esto?
     return nullptr;
 }
 
