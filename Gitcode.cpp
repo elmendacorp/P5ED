@@ -6,7 +6,9 @@
 #include <fstream>
 #include <iostream>
 #include <iterator>
-
+#include "vDinamico.h"
+#include "ListaDEnlazada2.h"
+#include "Abb.h"
 
 
 Commit Gitcode::getCommit(std::string &commi) {

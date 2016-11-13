@@ -32,7 +32,7 @@ public:
 
     void escribe(unsigned pos, T &dato);
 
-    vDinamico<T> &operator=(const vDinamico<T> &orig);
+    vDinamico<T> operator=(const vDinamico<T> &orig);
 
     T &operator[](unsigned pos);
 
@@ -45,7 +45,7 @@ public:
     T disminuye();
 
     unsigned tama() {
-        return tamal;
+        return (unsigned) tamal;
     }
 
 
@@ -250,7 +250,7 @@ T vDinamico<T>::busca(const T &dato) {
      * @return
      */
 template<typename T>
-vDinamico<T> &operator=(const vDinamico<T> &orig) {
+vDinamico<T> vDinamico<T>::operator=(const vDinamico<T> &orig) {
     if (orig.tamal > tamaf) {
         tamaf = orig.tamaf;
         delete[] v;
@@ -261,11 +261,12 @@ vDinamico<T> &operator=(const vDinamico<T> &orig) {
         v[i] = orig.v[i];
     }
 }
-template <typename T>
-T vDinamico::disminuye() {
-    if(tamal>0){
+
+template<typename T>
+T vDinamico<T>::disminuye() {
+    if (tamal > 0) {
         --tamal;
-        return v[tamal+1];
+        return v[tamal + 1];
     }
 }
 
