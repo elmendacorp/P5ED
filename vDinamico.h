@@ -85,7 +85,7 @@ private:
 template<typename T>
 vDinamico<T>::vDinamico() {
     tamal = 0;
-    tamaf = 1;
+    tamaf = 0;
     v = new T[tamaf];
 }
 
