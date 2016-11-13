@@ -69,7 +69,7 @@ vDinamico<T>::vDinamico() {
 }
 
 /**
- * constructor con valot por defecto
+ * constructor con valor por defecto
  * @param tam
  * @param dato
  */
@@ -77,7 +77,7 @@ template<typename T>
 vDinamico<T>::vDinamico(unsigned tam, const T &dato) {
     tamaf = pow(2, ((unsigned) log2(tam)) + 1);
     v = new T[tamaf];
-    tamal = 0;
+    tamal = tamaf;
     for (unsigned i = 0; i < tamaf; ++i) {
         v[i] = dato;
     }

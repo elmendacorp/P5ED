@@ -5,8 +5,9 @@
 #ifndef UNTITLED_ABB_H
 #define UNTITLED_ABB_H
 
-#include <cassert>
+#include<cassert>
 #include<vector>
+#include<stack>
 
 namespace ABB {
     template<typename T>
@@ -383,6 +384,52 @@ namespace ABB {
         Nodo<T> *aux = tmp[tmp.size() - 1];
         for (int i = tmp.size() - 1; i >= 0; --i) {
             borraDato(aux->getDato(), aux);
+        }
+    }
+    /**
+     * Recorrido en preorden de un arbol binario
+     * @param p
+     * @param nivel
+     */
+    template<typename T>
+    void ABB<T>::preorden(Nodo<T> *p, int nivel) {
+        if(p!=0) {
+            Nodo<T>* actual;
+            vector<Nodo<T> *> tmp;
+            std::stack<Nodo<T> *> pila;
+            tmp.push_back(p);
+            if(p->tieneIzquierda()){pila.push(p->getIzquierda());}
+            if(p->tieneDerecha()){pila.push(p->getDerecha());}
+            while(!pila.empty()){
+                actual=pila.top();
+                pila.pop();
+                tmp.push_back(actual);
+                if(actual->tieneIzquierda()){pila.push(actual->getIzquierda());}
+                if(actual->tieneDerecha()){pila.push(actual->getDerecha());}
+            }
+        }
+    }
+    /**
+     * recorrido en inorden de un arbolbinario
+     * @param p
+     * @param nivel
+     */
+    template<typename T>
+    void ABB::inorden(Nodo<T> *p, int nivel) {
+        if(p!=0) {
+            Nodo<T>* actual;
+            vector<Nodo<T> *> tmp;
+            std::stack<Nodo<T> *> pila;
+            tmp.push_back(p);
+            if(p->tieneIzquierda()){pila.push(p->getIzquierda());}
+            if(p->tieneDerecha()){pila.push(p->getDerecha());}
+            while(!pila.empty()){
+                actual=pila.top();
+                pila.pop();
+                tmp.push_back(actual);
+                if(actual->tieneIzquierda()){pila.push(actual->getIzquierda());}
+                if(actual->tieneDerecha()){pila.push(actual->getDerecha());}
+            }
         }
     }
 }
