@@ -252,7 +252,7 @@ ListaDEnlazada<T>::~ListaDEnlazada() {
 template<typename T>
 ListaDEnlazada<T>::ListaDEnlazada() {
     cabecera = 0;
-    cola;
+    cola=0;
 }
 
 

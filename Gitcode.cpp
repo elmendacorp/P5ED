@@ -8,6 +8,7 @@
 #include <iterator>
 
 
+
 Commit Gitcode::getCommit(std::string &commi) {
     auto ite = commits.begin();
     while (ite != commits.end()) {

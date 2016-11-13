@@ -32,29 +32,8 @@ public:
 
     void escribe(unsigned pos, T &dato);
 
+    vDinamico<T> &operator=(const vDinamico<T> &orig);
 
-    /**
-     * COnstructor de copia
-     * @param orig
-     * @return 
-     */
-    vDinamico<T> &operator=(const vDinamico<T> &orig) {
-        if (orig.tamal > tamaf) {
-            tamaf = orig.tamaf;
-            delete[] v;
-            v = new T[tamaf];
-        }
-        tamal = orig.tamal;
-        for (unsigned i = 0; i < tamal; ++i) {
-            v[i] = orig.v[i];
-        }
-    }
-
-    /**
-     * operador cochete
-     * @param pos
-     * @return 
-     */
     T &operator[](unsigned pos);
 
     void inserta(unsigned pos, T &dato);
@@ -85,7 +64,7 @@ private:
 template<typename T>
 vDinamico<T>::vDinamico() {
     tamal = 0;
-    tamaf = 0;
+    tamaf = 1;
     v = new T[tamaf];
 }
 
@@ -157,8 +136,8 @@ void vDinamico<T>::inserta(unsigned pos, T &dato) {
         vDinamico<T> temp(*this);
         tamaf *= 2;
         delete[] v;
-        v= new T [tamaf];
-        v= temp.v;
+        v = new T[tamaf];
+        v = temp.v;
 
     }
     ++tamal;
@@ -209,6 +188,11 @@ T &vDinamico<T>::elimina(unsigned pos) {
     return temp;
 }
 
+/**
+  * operador cochete
+  * @param pos
+  * @return
+  */
 template<typename T>
 T &vDinamico<T>::operator[](unsigned pos) {
     if (pos > tamal) {
@@ -253,10 +237,35 @@ void vDinamico<T>::escribe(unsigned pos, T &dato) {
 
 template<typename T>
 T vDinamico<T>::busca(const T &dato) {
-    for(unsigned i=0;i<tamal;++i){
-        if(v[i]== dato){
+    for (unsigned i = 0; i < tamal; ++i) {
+        if (v[i] == dato) {
             return v[i];
         }
+    }
+}
+
+/**
+     * COnstructor de copia
+     * @param orig
+     * @return
+     */
+template<typename T>
+vDinamico<T> &operator=(const vDinamico<T> &orig) {
+    if (orig.tamal > tamaf) {
+        tamaf = orig.tamaf;
+        delete[] v;
+        v = new T[tamaf];
+    }
+    tamal = orig.tamal;
+    for (unsigned i = 0; i < tamal; ++i) {
+        v[i] = orig.v[i];
+    }
+}
+template <typename T>
+T vDinamico::disminuye() {
+    if(tamal>0){
+        --tamal;
+        return v[tamal+1];
     }
 }
 
