@@ -29,6 +29,7 @@ public:
     }
 
     Nodo(const Nodo<T> *&orig) {
+        this=new Nodo<T>();
         elemento = orig->elemento;
         anterior = orig->anterior;
         siguiente = orig->siguiente;
@@ -54,7 +55,7 @@ public:
         this->elemento = elemento;
     }
 
-    T GetElemento() {
+    const T GetElemento() {
         return elemento;
     }
 
@@ -71,7 +72,7 @@ private:
     friend class ListaDEnlazada;
 
 public:
-    Iterador(Nodo<T> *aNodo) : nodo(aNodo) {}
+    Iterador(Nodo<T> * &aNodo) : nodo(aNodo) {}
 
     bool hayAnterior() { return nodo->GetAnterior() != 0; }
 
@@ -87,7 +88,7 @@ public:
 
     T &dato() { return nodo->GetElemento(); }
 
-    Nodo<T> *operator*(Iterador<T> &it) { return it.nodo; }
+    Nodo<T> * operator*(Iterador<T> &it) { return it.nodo; }
 
 
 };
@@ -131,7 +132,6 @@ public:
     Iterador<T> iteradorFin() { return Iterador<T>(cola); };
 
     void insertar(Iterador<T> &i, T &dato);
-
 
     void borrar(Iterador<T> &i);
 
@@ -209,11 +209,17 @@ void ListaDEnlazada<T>::insertar(Iterador<T> &i, T &dato) {
 
 template<typename T>
 void ListaDEnlazada<T>::borrar(Iterador<T> &i) {
-    Nodo<T> *temporal(i.nodo);
-    assert(temporal != 0);
-    temporal->GetAnterior()->SetSiguiente(temporal->GetSiguiente());
-    temporal->GetSiguiente()->SetAnterior(temporal->GetAnterior());
-    delete temporal;
+    if(i==this->iteradorInicio()){
+        this->borrarInicio();
+    }else if(i==this->iteradorFin()){
+        this->borrarFinal();
+    }else {
+        Nodo<T> *temporal(i.nodo);
+        assert(temporal != 0);
+        temporal->GetAnterior()->SetSiguiente(temporal->GetSiguiente());
+        temporal->GetSiguiente()->SetAnterior(temporal->GetAnterior());
+        delete temporal;
+    }
 
 }
 

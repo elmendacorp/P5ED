@@ -137,11 +137,13 @@ void vDinamico<T>::inserta(unsigned pos, T &dato) {
         tamaf *= 2;
         delete[] v;
         v = new T[tamaf];
-        v = temp.v;
+        for (unsigned i = 0; i < temp.tamal; ++i) {
+            v[i] = temp.v[i];
+        }
 
     }
     ++tamal;
-    for (unsigned i = tamal - 1; i < pos; --i) {
+    for (unsigned i = (unsigned)tamal - 1; i < pos; --i) {
         v[i] = v[i - 1];
     }
     v[pos] = dato;

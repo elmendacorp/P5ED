@@ -382,7 +382,7 @@ namespace ABB {
     ABB<T>::~ABB() {
         std::vector<Nodo<T> *> tmp = this->anchura(raiz);
         Nodo<T> *aux = tmp[tmp.size() - 1];
-        for (int i = tmp.size() - 1; i >= 0; --i) {
+        for (int i = (int)tmp.size() - 1; i >= 0; --i) {
             borraDato(aux->getDato(), aux);
         }
     }
@@ -395,17 +395,17 @@ namespace ABB {
     void ABB<T>::preorden(Nodo<T> *p, int nivel) {
         if(p!=0) {
             Nodo<T>* actual;
-            vector<Nodo<T> *> tmp;
+            std::vector<Nodo<T> *> tmp;
             std::stack<Nodo<T> *> pila;
             tmp.push_back(p);
-            if(p->tieneIzquierda()){pila.push(p->getIzquierda());}
             if(p->tieneDerecha()){pila.push(p->getDerecha());}
+            if(p->tieneIzquierda()){pila.push(p->getIzquierda());}
             while(!pila.empty()){
                 actual=pila.top();
                 pila.pop();
                 tmp.push_back(actual);
-                if(actual->tieneIzquierda()){pila.push(actual->getIzquierda());}
                 if(actual->tieneDerecha()){pila.push(actual->getDerecha());}
+                if(actual->tieneIzquierda()){pila.push(actual->getIzquierda());}
             }
         }
     }
@@ -415,10 +415,10 @@ namespace ABB {
      * @param nivel
      */
     template<typename T>
-    void ABB::inorden(Nodo<T> *p, int nivel) {
+    void ABB<T>::inorden(Nodo<T> *p, int nivel) {
         if(p!=0) {
             Nodo<T>* actual;
-            vector<Nodo<T> *> tmp;
+            std::vector<Nodo<T> *> tmp;
             std::stack<Nodo<T> *> pila;
             tmp.push_back(p);
             if(p->tieneIzquierda()){pila.push(p->getIzquierda());}
