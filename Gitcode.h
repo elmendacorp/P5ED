@@ -23,6 +23,8 @@ private:
         refCommit(const refCommit &orig): codCommit(orig.codCommit),itc(orig.itc){}
     };
 
+    ListaDEnlazada<Commit> milista;
+    ABB<Commit*> buscar;
     list<Commit> commits;
     vector<Fichero *> ficheros;
     std::string fileFichero;
