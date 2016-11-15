@@ -7,9 +7,6 @@
 #include <iostream>
 #include <iterator>
 #include "vDinamico.h"
-#include "Abb.h"
-#include "ListaDEnlazada2.h"
-
 
 
 Commit Gitcode::getCommit(std::string &commi) {
@@ -79,6 +76,7 @@ Gitcode::Gitcode(const std::string &fich, const std::string &commi) {
             ficheros.push_back(f);
 
 
+
         }
         inputStream.close();
     } catch (exception &e) {
@@ -125,6 +123,9 @@ Gitcode::Gitcode(const std::string &fich, const std::string &commi) {
                 indice = indice.substr(0, pos);
             }
             commits.push_back(inserta);
+            refCommit inserta2=refCommit(inserta.getCodigo(),commits.end());
+
+
 
         }
         inputStream.close();

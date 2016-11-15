@@ -7,7 +7,6 @@
 
 #include<cassert>
 #include<vector>
-#include<stack>
 
 
 template<typename T>
@@ -21,9 +20,9 @@ public:
 
     NodoA(const T &orig) : izquierda(0), derecha(0), dato(orig) {}
 
-    void setDato(T &dato) { this->dato = dato; }
+    void setDato(const T &dato) { this->dato = dato; }
 
-    T getDato() { return dato; }
+    T &getDato() { return dato; }
 
     bool tieneDerecha() { return derecha != 0; }
 
@@ -44,7 +43,7 @@ private:
 
     NodoA<T> *raiz;
 
-    NodoA<T> *inserta(const T &dato);
+    NodoA<T> *inserta( T &dato);
 
     NodoA<T> *buscaClave(const T &ele);
 
@@ -56,12 +55,6 @@ private:
 
     std::vector<NodoA<T> *> anchura(NodoA<T> *p);
 
-    void preorden(NodoA<T> *p, int nivel);
-
-    void inorden(NodoA<T> *p, int nivel);
-
-    void postorden(NodoA<T> *p, int nivel);
-
 
 public:
     ABB();
@@ -72,7 +65,7 @@ public:
 
     bool buscar(const T &ele, NodoA<T> *&resultado);
 
-    bool insertar(const T &ele);
+    bool insertar(T &ele);
 
     bool eliminar(const T &ele);
 
@@ -81,12 +74,6 @@ public:
     int altura();
 
     int numHojas();
-
-    void recorrerPreorden() { preorden(raiz, 0); }
-
-    void recorrerInorden() { inorden(raiz, 0); }
-
-    void recorrerPostorden() { postorden(raiz, 0); }
 
 
 };
@@ -105,7 +92,7 @@ ABB<T>::ABB() {
  * @param dato
  */
 template<typename T>
-NodoA<T> *ABB<T>::inserta(const T &dato) {
+NodoA<T> *ABB<T>::inserta(T &dato) {
 
     if (raiz == 0) {
         NodoA<T> *tmp = new NodoA<T>(); //En este caso es el de que la raiz es nula
@@ -151,7 +138,7 @@ NodoA<T> *ABB<T>::inserta(const T &dato) {
  * @return true su insertado, false en otro caso
  */
 template<typename T>
-bool ABB<T>::insertar(const T &ele) {
+bool ABB<T>::insertar(T &ele) {
     return (inserta(ele) != 0); //si no se inserta en el caso que el dato sea igual a un existente
 }
 
@@ -379,58 +366,10 @@ NodoA<T> *ABB<T>::borraMin(NodoA<T> *p) {
 
 template<typename T>
 ABB<T>::~ABB() {
-    std::vector<NodoA<T>*> tmp = this->anchura(raiz);
+    std::vector<NodoA<T> *> tmp = this->anchura(raiz);
     NodoA<T> *aux = tmp[tmp.size() - 1];
     for (int i = (int) tmp.size() - 1; i >= 0; --i) {
-        borraDato(tmp.back()->getDato(),tmp.back());
-    }
-}
-
-/**
- * Recorrido en preorden de un arbol binario
- * @param p
- * @param nivel
- */
-template<typename T>
-void ABB<T>::preorden(NodoA<T> *p, int nivel) {
-    if (p != 0) {
-        NodoA<T> *actual;
-        std::vector<NodoA<T> *> tmp;
-        std::stack<NodoA<T> *> pila;
-        tmp.push_back(p);
-        if (p->tieneDerecha()) { pila.push(p->getDerecha()); }
-        if (p->tieneIzquierda()) { pila.push(p->getIzquierda()); }
-        while (!pila.empty()) {
-            actual = pila.top();
-            pila.pop();
-            tmp.push_back(actual);
-            if (actual->tieneDerecha()) { pila.push(actual->getDerecha()); }
-            if (actual->tieneIzquierda()) { pila.push(actual->getIzquierda()); }
-        }
-    }
-}
-
-/**
- * recorrido en inorden de un arbolbinario
- * @param p
- * @param nivel
- */
-template<typename T>
-void ABB<T>::inorden(NodoA<T> *p, int nivel) {
-    if (p != 0) {
-        NodoA<T> *actual;
-        std::vector<NodoA<T> *> tmp;
-        std::stack<NodoA<T> *> pila;
-        tmp.push_back(p);
-        if (p->tieneIzquierda()) { pila.push(p->getIzquierda()); }
-        if (p->tieneDerecha()) { pila.push(p->getDerecha()); }
-        while (!pila.empty()) {
-            actual = pila.top();
-            pila.pop();
-            tmp.push_back(actual);
-            if (actual->tieneIzquierda()) { pila.push(actual->getIzquierda()); }
-            if (actual->tieneDerecha()) { pila.push(actual->getDerecha()); }
-        }
+        borraDato(tmp.back()->getDato(), tmp.back());
     }
 }
 

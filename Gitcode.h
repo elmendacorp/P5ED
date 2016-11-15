@@ -21,10 +21,12 @@ private:
         list<Commit>::iterator itc;
         refCommit(const std::string &cod,const list<Commit>::iterator &it) :codCommit(cod),itc(it){}
         refCommit(const refCommit &orig): codCommit(orig.codCommit),itc(orig.itc){}
+        bool operator <(const refCommit &orig){return codCommit<orig.codCommit;}
+        bool operator >(const refCommit &orig){return codCommit>orig.codCommit;}
     };
 
     ListaDEnlazada<Commit> milista;
-    ABB<Commit*> buscar;
+    ABB<refCommit> buscar;
     list<Commit> commits;
     vector<Fichero *> ficheros;
     std::string fileFichero;
