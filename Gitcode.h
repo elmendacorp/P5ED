@@ -10,16 +10,16 @@
 #include "fecha.h"
 #include "vDinamico.h"
 #include "Abb.h"
-#include "ListaDEnlazada2.h"
+#include "Lista.h"
 
 class Gitcode {
 private:
     class refCommit {
     public:
         std::string codCommit;
-        Iterador<Commit> itc;
+        IteradorL<Commit> itc;
         refCommit(){}
-        refCommit(const std::string &cod,const Iterador<Commit> &it) :codCommit(cod),itc(it){}
+        refCommit(const std::string &cod,const IteradorL<Commit> &it) :codCommit(cod),itc(it){}
         refCommit(const refCommit &orig): codCommit(orig.codCommit),itc(orig.itc){}
         bool operator <(const refCommit &orig){return codCommit<orig.codCommit;}
         bool operator >(const refCommit &orig){return codCommit>orig.codCommit;}
@@ -27,7 +27,7 @@ private:
 
 
     ABB<refCommit> ABBbuscar;
-    ListaDEnlazada<Commit> commits;
+    Lista<Commit> commits;
     vDinamico<Fichero *> ficheros;
 public:
     /**
@@ -52,7 +52,6 @@ public:
 
     std::string getStatus();
 
-    ~Gitcode();
 };
 
 

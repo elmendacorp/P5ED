@@ -10,7 +10,7 @@
 
 
 Commit Gitcode::getCommit(std::string &commi) {
-    Iterador<Commit> ite = commits.iteradorInicio();
+    IteradorL<Commit> ite = commits.iteradorInicio();
     while (ite != commits.iteradorFin()) {
         Commit tm = ite.dato();
         if (tm.getCodigo() == commi) {
@@ -24,7 +24,7 @@ Commit Gitcode::getCommit(std::string &commi) {
 
 vDinamico<Commit*> Gitcode::getCommitFechas(const Fecha &inicio, const Fecha &fin) {
     vDinamico<Commit*> tempo;
-    Iterador<Commit> ite = commits.iteradorInicio();
+    IteradorL<Commit> ite = commits.iteradorInicio();
     while (ite != commits.iteradorFin()) {
         if (ite.dato().getMarcaDeTiempo() < fin && ite.dato().getMarcaDeTiempo() > inicio) {
             Commit* t = &ite.dato();
@@ -38,7 +38,7 @@ vDinamico<Commit*> Gitcode::getCommitFechas(const Fecha &inicio, const Fecha &fi
 
 vDinamico<Commit*> Gitcode::getCommitFichero(std::string fichero) {
     vDinamico<Commit*> temporal;
-    Iterador<Commit> tempo = commits.iteradorInicio();
+    IteradorL<Commit> tempo = commits.iteradorInicio();
     while (tempo != commits.iteradorFin()) {
         Fichero *t = tempo.dato().buscaFichero(fichero);
         if (t->getTamaBytes() != 0) {
@@ -122,7 +122,7 @@ Gitcode::Gitcode(const std::string &fich, const std::string &commi) {
                 inserta.anadeFichero(ficheros[ref]);
                 indice = indice.substr(0, pos);
             }
-            Iterador<Commit> in=commits.iteradorFin();
+            IteradorL<Commit> in=commits.iteradorFin();
             commits.insertar(in,inserta);
             refCommit inserta2=refCommit(inserta.getCodigo(),commits.iteradorFin());
             ABBbuscar.insertar(inserta2);
@@ -138,18 +138,13 @@ Gitcode::Gitcode(const std::string &fich, const std::string &commi) {
 }
 
 void Gitcode::eliminaFichero(std::string &fichero) {
-    Iterador<Commit> miIt = commits.iteradorInicio();
+    IteradorL<Commit> miIt = commits.iteradorInicio();
     while (miIt != commits.iteradorFin()) {
         miIt.dato().borraFichero(fichero);
         miIt.siguiente();
     }
 }
 
-Gitcode::~Gitcode() {
-    ficheros.~vDinamico();
-    commits.~ListaDEnlazada();
-
-}
 
 void Gitcode::nuevoCommit(Commit &orig) {
     refCommit b=refCommit(orig.getCodigo(),commits.iteradorInicio());
@@ -163,7 +158,6 @@ void Gitcode::nuevoCommit(Commit &orig) {
 bool Gitcode::borraCommit(const std::string &codigo) {
     refCommit b=refCommit(codigo,commits.iteradorInicio());
     if(ABBbuscar.buscar(b)){
-
     }
 
 }

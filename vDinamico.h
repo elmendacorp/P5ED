@@ -156,9 +156,9 @@ void vDinamico<T>::inserta(unsigned pos, T &dato) {
 template<typename T>
 void vDinamico<T>::aumenta(T &dato) {
     if (tamal == tamaf) {
-        vDinamico<T> temp;
-        for (unsigned i = 0; i < temp.tamal; ++i) {
-            temp.v[i] = v[i];
+        vDinamico<T>temp;
+        for (unsigned i = 0; i < tamal; ++i) {
+            temp.aumenta(v[i]);
         }
         tamaf *= 2;
         delete[] v;

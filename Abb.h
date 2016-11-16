@@ -366,11 +366,7 @@ NodoA<T> *ABB<T>::borraMin(NodoA<T> *p) {
 
 template<typename T>
 ABB<T>::~ABB() {
-    std::vector<NodoA<T> *> tmp = this->anchura(raiz);
-    NodoA<T> *aux = tmp[tmp.size() - 1];
-    for (int i = (int) tmp.size() - 1; i >= 0; --i) {
-        borraDato(tmp.back()->getDato(), tmp.back());
-    }
+    this->borraDato(raiz->getDato(),raiz);
 }
 
 
