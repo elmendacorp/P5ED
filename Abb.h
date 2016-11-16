@@ -63,7 +63,7 @@ public:
 
     ABB(const ABB<T> &orig);
 
-    bool buscar(const T &ele, NodoA<T> *&resultado);
+    bool buscar(const T &ele);
 
     bool insertar(T &ele);
 
@@ -185,8 +185,8 @@ NodoA<T> *ABB<T>::buscaClave(const T &ele) {
  * @return true si se ha encontrado, false en otro caso
  */
 template<typename T>
-bool ABB<T>::buscar(const T &ele, NodoA<T> *&resultado) {
-    resultado = buscaClave(ele);
+bool ABB<T>::buscar(const T &ele) {
+    NodoA<T>* resultado = buscaClave(ele);
     return (resultado != 0);
 }
 
@@ -268,9 +268,9 @@ NodoA<T> *ABB<T>::borraDato(const T &ele, NodoA<T> *p) {
  */
 template<typename T>
 bool ABB<T>::eliminar(const T &ele) {
-    NodoA<T> *tmp;
-    if (this->buscar(ele, tmp)) {
-        this->borraDato(ele, tmp);
+    NodoA<T> *tmp ;
+    if (this->buscar(ele)) {
+        tmp=this->borraDato(ele, tmp);
         return true;
     }
     return false;

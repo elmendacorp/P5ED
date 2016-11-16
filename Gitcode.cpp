@@ -5,47 +5,47 @@
 #include "Gitcode.h"
 #include <fstream>
 #include <iostream>
-#include <iterator>
-#include "vDinamico.h"
+
+
 
 
 Commit Gitcode::getCommit(std::string &commi) {
-    auto ite = commits.begin();
-    while (ite != commits.end()) {
-        Commit tm = *ite;
+    Iterador<Commit> ite = commits.iteradorInicio();
+    while (ite != commits.iteradorFin()) {
+        Commit tm = ite.dato();
         if (tm.getCodigo() == commi) {
-            return *ite;
+            return ite.dato();
         }
-        ++ite;
+        ite.siguiente();
 
     }
 
 }
 
-vector<Commit> Gitcode::getCommitFechas(const Fecha &inicio, const Fecha &fin) {
-    vector<Commit> tempo;
-    auto ite = commits.begin();
-    while (ite != commits.end()) {
-        if (ite->getMarcaDeTiempo() < fin && ite->getMarcaDeTiempo() > inicio) {
-            Commit t = *ite;
-            tempo.push_back(t);
+vDinamico<Commit*> Gitcode::getCommitFechas(const Fecha &inicio, const Fecha &fin) {
+    vDinamico<Commit*> tempo;
+    Iterador<Commit> ite = commits.iteradorInicio();
+    while (ite != commits.iteradorFin()) {
+        if (ite.dato().getMarcaDeTiempo() < fin && ite.dato().getMarcaDeTiempo() > inicio) {
+            Commit* t = &ite.dato();
+            tempo.aumenta(t);
         }
-        ++ite;
+        ite.siguiente();
     }
 
     return tempo;
 }
 
-vector<Commit> Gitcode::getCommitFichero(std::string fichero) {
-    vector<Commit> temporal;
-    auto tempo = commits.begin();
-    while (tempo != commits.end()) {
-        Fichero *t = tempo->buscaFichero(fichero);
+vDinamico<Commit*> Gitcode::getCommitFichero(std::string fichero) {
+    vDinamico<Commit*> temporal;
+    Iterador<Commit> tempo = commits.iteradorInicio();
+    while (tempo != commits.iteradorFin()) {
+        Fichero *t = tempo.dato().buscaFichero(fichero);
         if (t->getTamaBytes() != 0) {
-            Commit d = *tempo;
-            temporal.push_back(d);
+            Commit *d = &tempo.dato();
+            temporal.aumenta(d);
         }
-        ++tempo;
+        tempo.siguiente();
     }
 
     return temporal;
@@ -73,7 +73,7 @@ Gitcode::Gitcode(const std::string &fich, const std::string &commi) {
             auto nombre = ruta.substr(pos + 1, ruta.length());
             auto tamaBytes = std::stoi(tama);
             f =new Fichero(nombre, ubicacion, tamaBytes);
-            ficheros.push_back(f);
+            ficheros.aumenta(f);
 
 
 
@@ -122,8 +122,11 @@ Gitcode::Gitcode(const std::string &fich, const std::string &commi) {
                 inserta.anadeFichero(ficheros[ref]);
                 indice = indice.substr(0, pos);
             }
-            commits.push_back(inserta);
-            refCommit inserta2=refCommit(inserta.getCodigo(),commits.end());
+            Iterador<Commit> in=commits.iteradorFin();
+            commits.insertar(in,inserta);
+            refCommit inserta2=refCommit(inserta.getCodigo(),commits.iteradorFin());
+            ABBbuscar.insertar(inserta2);
+
 
 
 
@@ -135,16 +138,41 @@ Gitcode::Gitcode(const std::string &fich, const std::string &commi) {
 }
 
 void Gitcode::eliminaFichero(std::string &fichero) {
-    list<Commit>::iterator miIt = commits.begin();
-    while (miIt != commits.end()) {
-        miIt->borraFichero(fichero);
-        ++miIt;
+    Iterador<Commit> miIt = commits.iteradorInicio();
+    while (miIt != commits.iteradorFin()) {
+        miIt.dato().borraFichero(fichero);
+        miIt.siguiente();
     }
 }
 
 Gitcode::~Gitcode() {
-    ficheros.clear();
-    commits.clear();
+    ficheros.~vDinamico();
+    commits.~ListaDEnlazada();
 
+}
+
+void Gitcode::nuevoCommit(Commit &orig) {
+    refCommit b=refCommit(orig.getCodigo(),commits.iteradorInicio());
+    if(!ABBbuscar.buscar(b)){
+        commits.insertar(b.itc,orig);
+        ABBbuscar.insertar(b);
+    }
+
+}
+
+bool Gitcode::borraCommit(const std::string &codigo) {
+    refCommit b=refCommit(codigo,commits.iteradorInicio());
+    if(ABBbuscar.buscar(b)){
+
+    }
+
+}
+
+std::string Gitcode::getStatus() {
+    std::string mistr;
+    mistr+= (char)ABBbuscar.altura();
+    mistr+= (char)ABBbuscar.numElementos();
+    mistr+= (char)ABBbuscar.numHojas();
+    return mistr;
 }
 

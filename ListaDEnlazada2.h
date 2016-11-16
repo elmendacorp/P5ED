@@ -55,7 +55,7 @@ public:
         this->elemento = elemento;
     }
 
-    const T GetElemento() {
+    T &GetElemento() {
         return elemento;
     }
 
@@ -69,10 +69,13 @@ class Iterador {
 private:
     Nodo<T> *nodo;
 
-    friend class ListaDEnlazada;
 
 public:
-    Iterador(Nodo<T> * &aNodo) : nodo(aNodo) {}
+    Iterador(): nodo(0){}
+
+    Iterador(Nodo<T> * aNodo) : nodo(aNodo) {}
+
+    Iterador(const Iterador<T> &orig): nodo(orig.nodo){}
 
     bool hayAnterior() { return nodo->GetAnterior() != 0; }
 
@@ -135,6 +138,8 @@ public:
 
     void borrar(Iterador<T> &i);
 
+    Iterador<T> buscaElemento(T & elem);
+
 
 };
 
@@ -188,7 +193,6 @@ void ListaDEnlazada<T>::insertarInicio(T &dato) {
 
 template<typename T>
 void ListaDEnlazada<T>::insertar(Iterador<T> &i, T &dato) {
-    assert(i.nodo != 0);
     if (i == this->iteradorInicio()) {
         this->insertarInicio(dato);
     } else if (i == this->iteradorFin()) {
@@ -196,13 +200,17 @@ void ListaDEnlazada<T>::insertar(Iterador<T> &i, T &dato) {
     } else {
         Nodo<T> *temporal = new Nodo<T>();
         temporal->SetElemento(dato);
+        Nodo<T> * buscador=cabecera;
+        while(buscador->GetElemento()!=i.dato()){
+            buscador=buscador->GetSiguiente();
+        }
         if (i.haySiguiente()) {
-            temporal->SetSiguiente(i.nodo->GetSiguiente());
-            i.nodo->SetAnterior(temporal);
+            temporal->SetSiguiente(buscador->GetSiguiente());
+            buscador->SetAnterior(temporal);
         }
         if (i.hayAnterior()) {
-            temporal->SetAnterior(i.nodo->GetAnterior());
-            i.nodo->SetSiguiente(temporal);
+            temporal->SetAnterior(buscador->GetAnterior());
+            buscador->SetSiguiente(temporal);
         }
     }
 }
@@ -214,7 +222,7 @@ void ListaDEnlazada<T>::borrar(Iterador<T> &i) {
     }else if(i==this->iteradorFin()){
         this->borrarFinal();
     }else {
-        Nodo<T> *temporal(i.nodo);
+        Nodo<T> *temporal(i.dato());
         assert(temporal != 0);
         temporal->GetAnterior()->SetSiguiente(temporal->GetSiguiente());
         temporal->GetSiguiente()->SetAnterior(temporal->GetAnterior());
@@ -259,6 +267,18 @@ template<typename T>
 ListaDEnlazada<T>::ListaDEnlazada() {
     cabecera = 0;
     cola=0;
+}
+
+template<typename T>
+Iterador<T> ListaDEnlazada<T>::buscaElemento(T &elem) {
+    Iterador<T> tmp= this->iteradorInicio();
+    while(tmp!=this->iteradorFin()){
+        if(tmp.dato()==elem){
+            return tmp;
+        }
+        tmp.siguiente();
+    }
+    return this->iteradorFin();
 }
 
 

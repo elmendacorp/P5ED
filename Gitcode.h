@@ -8,8 +8,7 @@
 #include "Fichero.h"
 #include "Commit.h"
 #include "fecha.h"
-#include <list>
-#include <vector>
+#include "vDinamico.h"
 #include "Abb.h"
 #include "ListaDEnlazada2.h"
 
@@ -18,30 +17,40 @@ private:
     class refCommit {
     public:
         std::string codCommit;
-        list<Commit>::iterator itc;
-        refCommit(const std::string &cod,const list<Commit>::iterator &it) :codCommit(cod),itc(it){}
+        Iterador<Commit> itc;
+        refCommit(){}
+        refCommit(const std::string &cod,const Iterador<Commit> &it) :codCommit(cod),itc(it){}
         refCommit(const refCommit &orig): codCommit(orig.codCommit),itc(orig.itc){}
         bool operator <(const refCommit &orig){return codCommit<orig.codCommit;}
         bool operator >(const refCommit &orig){return codCommit>orig.codCommit;}
     };
 
-    ListaDEnlazada<Commit> milista;
-    ABB<refCommit> buscar;
-    list<Commit> commits;
-    vector<Fichero *> ficheros;
-    std::string fileFichero;
-    std::string fileCommits;
-    Fecha *fecha;
+
+    ABB<refCommit> ABBbuscar;
+    ListaDEnlazada<Commit> commits;
+    vDinamico<Fichero *> ficheros;
 public:
+    /**
+     * Busca un commit por su  V1
+     * @param commi
+     * @return
+     */
     Commit getCommit(std::string &commi);
 
-    vector<Commit> getCommitFechas(const Fecha &inicio, const Fecha &fin);
 
-    vector<Commit> getCommitFichero(std::string fichero);
+    vDinamico<Commit*> getCommitFechas(const Fecha &inicio, const Fecha &fin);
+
+    vDinamico<Commit*> getCommitFichero(std::string fichero);
 
     Gitcode(const std::string &fich, const std::string &commi);
 
     void eliminaFichero(std::string &fichero);
+
+    void nuevoCommit(Commit &orig);
+
+    bool borraCommit(const std::string &codigo);
+
+    std::string getStatus();
 
     ~Gitcode();
 };
